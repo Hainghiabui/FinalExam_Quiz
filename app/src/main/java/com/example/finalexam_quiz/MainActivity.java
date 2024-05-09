@@ -1,5 +1,6 @@
 package com.example.finalexam_quiz;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private Button backButton, nextButton;
     private int score = 0;
     private List<Question> questions = new ArrayList<>();
+    private Button currentButton = null;
+    private ArrayList<Button> buttons = new ArrayList<>(); // Add this line
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,22 +70,38 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             questions.addAll(db.questionDao().getAll());
             runOnUiThread(() -> {
+
                 for (int i = 0; i < questions.size(); i++) {
                     Button button = new Button(MainActivity.this);
                     button.setText(String.valueOf(i + 1));
+                    button.setTextColor(Color.WHITE);
                     final int questionIndex = i;
-                    button.setOnClickListener(v -> {
-                        currentIndex = questionIndex;
-                        showQuestion(questions.get(currentIndex));
-                    });
-
-                    // Set the size of the button
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                     params.width = 0;
                     params.height = GridLayout.LayoutParams.WRAP_CONTENT;
                     params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
                     params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+
+
                     button.setLayoutParams(params);
+                    button.setBackground(ContextCompat.getDrawable(this, R.drawable.button_states));
+
+                    button.setOnClickListener(v -> {
+                        // Reset color of previously selected button
+                        if (currentButton != null) {
+                            currentButton.setSelected(false);
+
+                        }
+                        // Change color of the selected button
+                        button.setSelected(true);
+
+                        // Keep track of the current selected button
+                        currentButton = button;
+
+                        currentIndex = questionIndex;
+                        showQuestion(questions.get(currentIndex));
+                    });
+                    buttons.add(button); // Add this line
 
                     questionsGridLayout.addView(button);
                 }
@@ -126,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         if (answer.equals(questions.get(currentIndex).answer)) {
             score++;
         }
+
+        buttons.get(currentIndex).setBackgroundResource(R.drawable.button_answered_state);
         if (currentIndex < questions.size() - 1) {
             currentIndex++;
             showQuestion(questions.get(currentIndex));
@@ -138,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
             nextButton.setVisibility(View.GONE);
             backButton.setVisibility(View.GONE);
         }
+
     };
 
     private void showQuestion(Question question) {
@@ -148,7 +171,13 @@ public class MainActivity extends AppCompatActivity {
         optionButton2.setVisibility(View.VISIBLE);
         optionButton3.setVisibility(View.VISIBLE);
         optionButton4.setVisibility(View.VISIBLE);
+        if (currentButton != null) {
+            currentButton.setSelected(false);
+        }
 
+        // Change color of the current button
+        currentButton = buttons.get(currentIndex);
+        currentButton.setSelected(true);
         String questionWithIndex = (currentIndex + 1) + ". " + question.content;
         questionTextView.setText(questionWithIndex);
 
@@ -162,5 +191,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             backButton.setVisibility(View.GONE);
         }
+
+
     }
 }
