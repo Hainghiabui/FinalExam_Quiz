@@ -1,0 +1,102 @@
+[
+  {
+    "content": "What is the capital of France?",
+    "options": "[\"Paris\", \"London\", \"Berlin\", \"Madrid\"]",
+    "answer": "Paris"
+  },
+  {
+    "content": "What is the capital of Vietnam?",
+    "options": "[\"Hanoi\", \"Cambodia\", \"Beijing\", \"Tokyo\"]",
+    "answer": "Hanoi"
+  },
+  {
+    "content": "What is 2 + 2?",
+    "options": "[\"3\", \"4\", \"5\", \"6\"]",
+    "answer": "4"
+  },
+  {
+    "content": "What is the largest ocean on Earth?",
+    "options": "[\"Atlantic Ocean\", \"Indian Ocean\", \"Arctic Ocean\", \"Pacific Ocean\"]",
+    "answer": "Pacific Ocean"
+  },
+  {
+    "content": "Which planet is known as the Red Planet?",
+    "options": "[\"Mars\", \"Venus\", \"Jupiter\", \"Saturn\"]",
+    "answer": "Mars"
+  },
+  {
+    "content": "What is the capital of Italy?",
+    "options": "[\"Rome\", \"Paris\", \"Berlin\", \"Madrid\"]",
+    "answer": "Rome"
+  },
+  {
+    "content": "What is the capital of Japan?",
+    "options": "[\"Tokyo\", \"Osaka\", \"Kyoto\", \"Hiroshima\"]",
+    "answer": "Tokyo"
+  },
+  {
+    "content": "What is 3 + 3?",
+    "options": "[\"5\", \"6\", \"7\", \"8\"]",
+    "answer": "6"
+  },
+  {
+    "content": "What is the largest continent on Earth?",
+    "options": "[\"Asia\", \"Africa\", \"Europe\", \"North America\"]",
+    "answer": "Asia"
+  },
+  {
+    "content": "Which planet is known as the Blue Planet?",
+    "options": "[\"Earth\", \"Mars\", \"Jupiter\", \"Saturn\"]",
+    "answer": "Earth"
+  },
+  {
+    "content": "What is the capital of Germany?",
+    "options": "[\"Berlin\", \"Munich\", \"Hamburg\", \"Frankfurt\"]",
+    "answer": "Berlin"
+  },
+  {
+    "content": "What is the capital of Russia?",
+    "options": "[\"Moscow\", \"Saint Petersburg\", \"Novosibirsk\", \"Yekaterinburg\"]",
+    "answer": "Moscow"
+  },
+  {
+    "content": "What is 4 + 4?",
+    "options": "[\"7\", \"8\", \"9\", \"10\"]",
+    "answer": "8"
+  },
+  {
+    "content": "What is the largest country by land area?",
+    "options": "[\"Russia\", \"Canada\", \"China\", \"United States\"]",
+    "answer": "Russia"
+  },
+  {
+    "content": "Which planet is known as the Gas Giant?",
+    "options": "[\"Jupiter\", \"Mars\", \"Earth\", \"Saturn\"]",
+    "answer": "Jupiter"
+  },
+  {
+    "content": "What is the capital of Australia?",
+    "options": "[\"Sydney\", \"Melbourne\", \"Brisbane\", \"Canberra\"]",
+    "answer": "Canberra"
+  },
+  {
+    "content": "What is the capital of Canada?",
+    "options": "[\"Toronto\", \"Vancouver\", \"Montreal\", \"Ottawa\"]",
+    "answer": "Ottawa"
+  },
+  {
+    "content": "What is 5 + 5?",
+    "options": "[\"9\", \"10\", \"11\", \"12\"]",
+    "answer": "10"
+  },
+  {
+    "content": "What is the largest desert on Earth?",
+    "options": "[\"Sahara\", \"Arabian\", \"Gobi\", \"Kalahari\"]",
+    "answer": "Sahara"
+  },
+  {
+    "content": "Which planet is known as the Ringed Planet?",
+    "options": "[\"Saturn\", \"Jupiter\", \"Mars\", \"Earth\"]",
+    "answer": "Saturn"
+  }
+]
