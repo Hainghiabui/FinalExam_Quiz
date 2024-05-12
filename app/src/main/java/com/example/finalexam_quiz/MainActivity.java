@@ -1,5 +1,6 @@
 package com.example.finalexam_quiz;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> selectedAnswers = new ArrayList<>();
     private ArrayList<String> correctAnswers = new ArrayList<>();
 
+    @SuppressLint("UnsafeIntentLaunch")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +95,23 @@ public class MainActivity extends AppCompatActivity {
         optionButton4.setTextColor(Color.BLACK);
 
         GridLayout questionsGridLayout = findViewById(R.id.questionsGridLayout);
-
+        Button finishButton = findViewById(R.id.finishButton);
+        finishButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Finish Quiz")
+                    .setMessage("Are you sure you want to finish?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        finishButton.setVisibility(View.GONE);
+                        displayResult();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
         new Thread(() -> {
             questions.addAll(db.questionDao().getAll());
             runOnUiThread(() -> {
-
                 for (int i = 0; i < questions.size(); i++) {
+                    selectedAnswers.add("No Answer");
                     Button button = new Button(MainActivity.this);
                     button.setText(String.valueOf(i + 1));
                     button.setTextColor(Color.WHITE);
@@ -129,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     buttons.add(button); // Add this line
 
                     questionsGridLayout.addView(button);
+                    correctAnswers.add(questions.get(i).answer);
                 }
                 if (!questions.isEmpty()) {
                     showQuestion(questions.get(0));
@@ -140,49 +156,17 @@ public class MainActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.nextButton);
         Button homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(v -> {
-            // Clear SharedPreferences
-            editor.clear();
-            editor.apply();
-
-            // Reset currentIndex and score
-            currentIndex = 0;
-            score = 0;
-
-            // Show the first question
-            showQuestion(questions.get(currentIndex));
-
-            // Reset the background and text color of the option buttons
-            optionButton1.setBackgroundColor(Color.parseColor("#D6EBFD"));
-            optionButton2.setBackgroundColor(Color.parseColor("#D6EBFD"));
-            optionButton3.setBackgroundColor(Color.parseColor("#D6EBFD"));
-            optionButton4.setBackgroundColor(Color.parseColor("#D6EBFD"));
-
-            // Reset the state of the question buttons
-            for (Button button : buttons) {
-                button.setSelected(false);
-                button.setBackgroundResource(R.drawable.button_states);
-            }
-
-            homeButton.setVisibility(View.GONE);
-            nextButton.setVisibility(View.VISIBLE);
+            // reset all
+            finish();
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
         });
         nextButton.setOnClickListener(v -> {
             if (currentIndex < questions.size() - 1) {
                 currentIndex++;
                 showQuestion(questions.get(currentIndex));
             } else {
-                questionTextView.setText("Quiz Finished! Your score: " + calculateScore() + "/" + questions.size());
-                optionButton1.setVisibility(View.GONE);
-                optionButton2.setVisibility(View.GONE);
-                optionButton3.setVisibility(View.GONE);
-                optionButton4.setVisibility(View.GONE);
-                nextButton.setVisibility(View.GONE);
-                backButton.setVisibility(View.GONE);
-                //hide the buttons of questions
-                for (Button button : buttons) {
-                    button.setVisibility(View.GONE);
-                }
-                homeButton.setVisibility(View.VISIBLE);
+                displayResult();
             }
         });
         backButton.setOnClickListener(v -> {
@@ -213,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttons.get(currentIndex).setBackgroundResource(R.drawable.button_answered_state);
         String selectedAnswer = selectedOption.getText().toString();
-        selectedAnswers.add(selectedAnswer);
+        selectedAnswers.set(questionNumber, selectedAnswer);
     }
 
 
@@ -225,25 +209,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         buttons.get(currentIndex).setBackgroundResource(R.drawable.button_answered_state);
-//        if (currentIndex < questions.size() - 1) {
-//            currentIndex++;
-//            showQuestion(questions.get(currentIndex));
-//        } else {
-//            questionTextView.setText("Quiz Finished! Your score: " + score);
-//            optionButton1.setVisibility(View.GONE);
-//            optionButton2.setVisibility(View.GONE);
-//            optionButton3.setVisibility(View.GONE);
-//            optionButton4.setVisibility(View.GONE);
-//            nextButton.setVisibility(View.GONE);
-//            backButton.setVisibility(View.GONE);
-//        }
     };
 
     private void showQuestion(Question question) {
         Type type = new TypeToken<List<String>>() {
         }.getType();
         List<String> options = new Gson().fromJson(question.options, type);
-        correctAnswers.add(question.answer);
         optionButton1.setVisibility(View.VISIBLE);
         optionButton2.setVisibility(View.VISIBLE);
         optionButton3.setVisibility(View.VISIBLE);
@@ -294,5 +265,51 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return score;
+    }
+
+    private void displayResult() {
+        questionTextView.setText("Quiz Finished! Your score: " + calculateScore() + "/" + questions.size());
+        optionButton1.setVisibility(View.GONE);
+        optionButton2.setVisibility(View.GONE);
+        optionButton3.setVisibility(View.GONE);
+        optionButton4.setVisibility(View.GONE);
+        nextButton.setVisibility(View.GONE);
+        backButton.setVisibility(View.GONE);
+        Button finishButton = findViewById(R.id.finishButton);
+        finishButton.setVisibility(View.GONE);
+        //hide the buttons of questions
+        for (Button button : buttons) {
+            button.setVisibility(View.GONE);
+        }
+        Button homeButton = findViewById(R.id.homeButton);
+        homeButton.setVisibility(View.VISIBLE);
+        ScrollView resultScrollView = findViewById(R.id.resultLayout);
+        LinearLayout resultLayout = new LinearLayout(this);
+        resultLayout.setOrientation(LinearLayout.VERTICAL);
+        resultScrollView.removeAllViews(); // Clear old results
+        resultScrollView.addView(resultLayout); // Add LinearLayout to ScrollView
+
+        for (int i = 0; i < questions.size(); i++) {
+            TextView questionView = new TextView(this);
+            questionView.setText("Question " + (i + 1) + ": " + questions.get(i).content);
+            resultLayout.addView(questionView);
+            TextView userAnswerView = new TextView(this);
+            String userAnswer = selectedAnswers.get(i);
+            userAnswerView.setText("Your answer: " + userAnswer);
+            resultLayout.addView(userAnswerView); // Add userAnswerView to resultLayout first
+
+            String correctAnswer = correctAnswers.get(i);
+            if (userAnswer.equals(correctAnswer)) {
+                questionView.setTextColor(Color.GREEN);
+            } else {
+                questionView.setTextColor(Color.RED);
+                TextView correctAnswerView = new TextView(this);
+                correctAnswerView.setText("Correct answer: " + correctAnswer);
+                resultLayout.addView(correctAnswerView); // Add correctAnswerView to resultLayout after userAnswerView
+            }
+        }
+
+
+        resultScrollView.setVisibility(View.VISIBLE); // Show the result layout
     }
 }

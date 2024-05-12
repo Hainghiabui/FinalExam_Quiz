@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main"
-    android:padding="30dp">
+    android:padding="30dp"
+    android:layout_marginTop="30dp"
+    tools:ignore="DuplicateIds">
 
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Question"
         android:textStyle="bold"
         android:textSize="18sp" />
@@ -79,7 +82,7 @@
         android:visibility="gone" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <GridLayout
             android:id="@+id/questionsGridLayout"
@@ -94,6 +97,39 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Finish"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/main"
+        android:padding="30dp">
+
+        <!-- Your TextView, Buttons, and other UI elements here -->
+
+        <ScrollView
+            android:id="@+id/resultLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- The TextViews will be added here in code -->
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
 
 </LinearLayout>
