@@ -110,11 +110,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/main"
+        android:id="@+id/mainLayout"
         android:padding="30dp">
 
-        <!-- Your TextView, Buttons, and other UI elements here -->
 
+
+        <!-- Your TextView, Buttons, and other UI elements here -->
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Hello world!"
+            android:textStyle="bold"
+            android:textSize="18sp" />
         <ScrollView
             android:id="@+id/resultLayout"
             android:layout_width="match_parent"

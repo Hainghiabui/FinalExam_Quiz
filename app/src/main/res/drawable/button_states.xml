@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái khi button được chọn -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#800080"/> <!-- Màu khi button được chọn -->
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+
+    <!-- Trạng thái mặc địh -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#717275"/> <!-- Màu mặc định -->
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+</selector>

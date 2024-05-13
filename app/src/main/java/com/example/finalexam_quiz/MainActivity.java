@@ -34,6 +34,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView questionTextView;
+    private TextView scoreTextView;
     private Button optionButton1, optionButton2, optionButton3, optionButton4;
     AppDatabase db;
     private int currentIndex = 0;
@@ -41,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private int score = 0;
     private List<Question> questions = new ArrayList<>();
     private Button currentButton = null;
-    private ArrayList<Button> buttons = new ArrayList<>(); // Add this line
+    private ArrayList<Button> buttons = new ArrayList<>();
     private ArrayList<String> selectedAnswers = new ArrayList<>();
     private ArrayList<String> correctAnswers = new ArrayList<>();
+
+    LinearLayout mainLayout;
 
     @SuppressLint("UnsafeIntentLaunch")
     @Override
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         db = AppDatabase.getDatabase(getApplicationContext());
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
         try {
             InputStream is = getAssets().open("questions.json");
             int size = is.available();
@@ -64,19 +66,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        SharedPreferences sharedPreferences = getSharedPreferences("OptionPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
         questionTextView = findViewById(R.id.questionTextView);
         optionButton1 = findViewById(R.id.optionButton1);
         optionButton2 = findViewById(R.id.optionButton2);
         optionButton3 = findViewById(R.id.optionButton3);
         optionButton4 = findViewById(R.id.optionButton4);
-//        optionButton1.setOnClickListener(optionListener);
-//        optionButton2.setOnClickListener(optionListener);
-//        optionButton3.setOnClickListener(optionListener);
-//        optionButton4.setOnClickListener(optionListener);
+        mainLayout = findViewById(R.id.mainLayout);
+        scoreTextView = findViewById(R.id.scoreTextView);
+        scoreTextView.setVisibility(View.GONE);
 
         View.OnClickListener optionClickListener = v -> onOptionSelected(v, currentIndex);
 
@@ -94,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         optionButton3.setTextColor(Color.BLACK);
         optionButton4.setTextColor(Color.BLACK);
 
-        GridLayout questionsGridLayout = findViewById(R.id.questionsGridLayout);
         Button finishButton = findViewById(R.id.finishButton);
         finishButton.setOnClickListener(v -> {
             new AlertDialog.Builder(MainActivity.this)
@@ -107,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                     .setNegativeButton("No", null)
                     .show();
         });
+
+        GridLayout questionsGridLayout = findViewById(R.id.questionsGridLayout);
         new Thread(() -> {
             questions.addAll(db.questionDao().getAll());
             runOnUiThread(() -> {
@@ -121,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
                     params.height = GridLayout.LayoutParams.WRAP_CONTENT;
                     params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
                     params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-
-
                     button.setLayoutParams(params);
                     button.setBackground(ContextCompat.getDrawable(this, R.drawable.button_states));
 
@@ -130,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                         // Reset color of previously selected button
                         if (currentButton != null) {
                             currentButton.setSelected(false);
-
                         }
                         // Change color of the selected button
                         button.setSelected(true);
@@ -190,26 +185,11 @@ public class MainActivity extends AppCompatActivity {
 
         selectedOption.setBackgroundColor(Color.parseColor("#6a5be2"));
 
-        SharedPreferences sharedPreferences = getSharedPreferences("OptionPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("lastSelectedOptionState" + questionNumber, selectedOption.getText().toString());
-        editor.apply();
-
         buttons.get(currentIndex).setBackgroundResource(R.drawable.button_answered_state);
         String selectedAnswer = selectedOption.getText().toString();
         selectedAnswers.set(questionNumber, selectedAnswer);
     }
 
-
-    View.OnClickListener optionListener = view -> {
-        Button b = (Button) view;
-        String answer = b.getText().toString();
-        if (answer.equals(questions.get(currentIndex).answer)) {
-            score++;
-        }
-
-        buttons.get(currentIndex).setBackgroundResource(R.drawable.button_answered_state);
-    };
 
     private void showQuestion(Question question) {
         Type type = new TypeToken<List<String>>() {
@@ -237,19 +217,22 @@ public class MainActivity extends AppCompatActivity {
         optionButton2.setText(options.get(1));
         optionButton3.setText(options.get(2));
         optionButton4.setText(options.get(3));
-        SharedPreferences sharedPreferences = getSharedPreferences("OptionPrefs", Context.MODE_PRIVATE);
-        String lastSelectedOptionState = sharedPreferences.getString("lastSelectedOptionState" + currentIndex, null);
 
-        if (lastSelectedOptionState != null) {
-            if (optionButton1.getText().toString().equals(lastSelectedOptionState)) {
+        if (selectedAnswers.get(currentIndex) != null) {
+            if (optionButton1.getText().toString().equals(selectedAnswers.get(currentIndex))) {
                 optionButton1.setBackgroundColor(Color.parseColor("#6a5be2"));
-            } else if (optionButton2.getText().toString().equals(lastSelectedOptionState)) {
+            } else if (optionButton2.getText().toString().equals(selectedAnswers.get(currentIndex))) {
                 optionButton2.setBackgroundColor(Color.parseColor("#6a5be2"));
-            } else if (optionButton3.getText().toString().equals(lastSelectedOptionState)) {
+            } else if (optionButton3.getText().toString().equals(selectedAnswers.get(currentIndex))) {
                 optionButton3.setBackgroundColor(Color.parseColor("#6a5be2"));
-            } else if (optionButton4.getText().toString().equals(lastSelectedOptionState)) {
+            } else if (optionButton4.getText().toString().equals(selectedAnswers.get(currentIndex))) {
                 optionButton4.setBackgroundColor(Color.parseColor("#6a5be2"));
             }
+        }
+        if (currentIndex == questions.size() - 1) {
+            nextButton.setVisibility(View.GONE);
+        } else {
+            nextButton.setVisibility(View.VISIBLE);
         }
         if (currentIndex > 0) {
             backButton.setVisibility(View.VISIBLE);
@@ -268,13 +251,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayResult() {
-        questionTextView.setText("Quiz Finished! Your score: " + calculateScore() + "/" + questions.size());
+
         optionButton1.setVisibility(View.GONE);
         optionButton2.setVisibility(View.GONE);
         optionButton3.setVisibility(View.GONE);
         optionButton4.setVisibility(View.GONE);
         nextButton.setVisibility(View.GONE);
         backButton.setVisibility(View.GONE);
+        questionTextView.setVisibility(View.GONE);
+
+
+        mainLayout.setVisibility(View.VISIBLE);
         Button finishButton = findViewById(R.id.finishButton);
         finishButton.setVisibility(View.GONE);
         //hide the buttons of questions
@@ -288,6 +275,8 @@ public class MainActivity extends AppCompatActivity {
         resultLayout.setOrientation(LinearLayout.VERTICAL);
         resultScrollView.removeAllViews(); // Clear old results
         resultScrollView.addView(resultLayout); // Add LinearLayout to ScrollView
+        scoreTextView.setVisibility(View.VISIBLE);
+        scoreTextView.setText("Your score: " + calculateScore() + "/" + questions.size());
 
         for (int i = 0; i < questions.size(); i++) {
             TextView questionView = new TextView(this);
@@ -308,8 +297,6 @@ public class MainActivity extends AppCompatActivity {
                 resultLayout.addView(correctAnswerView); // Add correctAnswerView to resultLayout after userAnswerView
             }
         }
-
-
         resultScrollView.setVisibility(View.VISIBLE); // Show the result layout
     }
 }
