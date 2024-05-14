@@ -7,8 +7,47 @@
     android:orientation="vertical"
     android:id="@+id/main"
     android:padding="30dp"
-    android:layout_marginTop="30dp"
     tools:ignore="DuplicateIds">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingVertical="20dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+
+        android:id="@+id/mainLayout">
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello world!"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp" />
+        <ScrollView
+            android:id="@+id/resultLayout"
+            android:layout_width="match_parent"
+            android:layout_height="680dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
+        </ScrollView>
+        <Button
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Home"
+            />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/questionTextView"
@@ -16,12 +55,14 @@
         android:layout_height="50dp"
         android:text="Question"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+
         android:orientation="vertical">
 
         <Button
@@ -56,7 +97,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:paddingVertical="20dp"
         android:orientation="horizontal">
 
         <Button
@@ -73,15 +114,10 @@
             android:layout_gravity="end"
             android:text="Next" />
     </FrameLayout>
-    <Button
-        android:id="@+id/homeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Home"
-        android:visibility="gone" />
+
     <ScrollView
         android:layout_width="match_parent"
+        android:paddingVertical="20dp"
         android:layout_height="wrap_content">
 
         <GridLayout
@@ -91,8 +127,7 @@
             android:columnCount="5"
             android:orientation="horizontal"
             android:useDefaultMargins="true"
-            android:alignmentMode="alignBounds"
-            android:layout_marginTop="24dp">
+            android:alignmentMode="alignBounds">
         </GridLayout>
 
     </ScrollView>
@@ -102,42 +137,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="Finish"/>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/mainLayout"
-        android:padding="30dp">
-
-
-
-        <!-- Your TextView, Buttons, and other UI elements here -->
-        <TextView
-            android:id="@+id/scoreTextView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Hello world!"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-        <ScrollView
-            android:id="@+id/resultLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- The TextViews will be added here in code -->
-            </LinearLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
-
 </LinearLayout>

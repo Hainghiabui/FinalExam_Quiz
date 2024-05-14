@@ -259,11 +259,10 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setVisibility(View.GONE);
         backButton.setVisibility(View.GONE);
         questionTextView.setVisibility(View.GONE);
-
-
-        mainLayout.setVisibility(View.VISIBLE);
         Button finishButton = findViewById(R.id.finishButton);
         finishButton.setVisibility(View.GONE);
+
+        mainLayout.setVisibility(View.VISIBLE);
         //hide the buttons of questions
         for (Button button : buttons) {
             button.setVisibility(View.GONE);
